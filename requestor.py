@@ -28,8 +28,6 @@ STARTING_TIMEOUT = timedelta(minutes=10000000) # Make this the one month task li
 
 
 class SimpleService(Service):
-    SIMPLE_SERVICE = "/golem/run/simple_service.py"
-    SIMPLE_SERVICE_CTL = "/golem/run/simulate_observations_ctl.py"
 
     def __repr__(self):
         return f"<{self.__class__.__name__}: {self.name}>"
@@ -42,7 +40,7 @@ class SimpleService(Service):
     @staticmethod
     async def get_payload():
         return await vm.repo(
-            image_hash="8b11df59f84358d47fc6776d0bb7290b0054c15ded2d6f54cf634488",
+            image_hash="62bae7f86e8dfc88c837c34bf73db9d8c43c0c9751e8e522376c14f3",
             min_mem_gib=0.5,
             min_storage_gib=2.0, # 2GB seems low for a DB
             
@@ -55,7 +53,7 @@ class SimpleService(Service):
         running, and potentially some version checking
         """
         # handler responsible for starting the service
-        self._ctx.run(self.SIMPLE_SERVICE_CTL, "--start")
+        self._ctx.run("nohup mongod run &")
         yield self._ctx.commit()
 
     async def run(self):
