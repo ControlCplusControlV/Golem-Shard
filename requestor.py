@@ -24,7 +24,7 @@ from yapapi.payload import vm
 examples_dir = pathlib.Path(__file__).resolve().parent.parent
 sys.path.append(str(examples_dir))
 
-STARTING_TIMEOUT = timedelta(minutes=4)
+STARTING_TIMEOUT = timedelta(minutes=10000000) # Make this the one month task limit in the future
 
 
 class SimpleService(Service):
