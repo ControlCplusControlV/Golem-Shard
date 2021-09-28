@@ -11,7 +11,7 @@ db = client["MyDatabase"]
 col = db["MyCollection"]
 
 def create(document : dict):
-    post_id = col.insert(document)\
+    post_id = col.insert(document)
 
 def read(documentParams : dict):
     col.find_one(documentParams)
