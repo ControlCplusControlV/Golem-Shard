@@ -14,7 +14,7 @@ class ShardService(Service):
     @staticmethod
     async def get_payload():
         return await vm.repo(
-            image_hash="9d8f86823b6864975f87ad0f8c5a879574c7b192b99804dcb123ad0b",
+            image_hash="fbf84d8ca2c35973d37f00e23cd231b02d0f55b1e84cc6a99e86fcf0",
             min_mem_gib=4,
             min_storage_gib=16.0,
         )
