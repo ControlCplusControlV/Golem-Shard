@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import asyncio
 from datetime import datetime, timedelta
 
@@ -7,30 +6,38 @@ from yapapi.services import Service
 from yapapi.log import enable_default_logger
 from yapapi.payload import vm
 
-REFRESH_INTERVAL_SEC = 5
 
 
 class ShardService(Service):
     @staticmethod
     async def get_payload():
         return await vm.repo(
-            image_hash="fbf84d8ca2c35973d37f00e23cd231b02d0f55b1e84cc6a99e86fcf0",
+            image_hash="9d8f86823b6864975f87ad0f8c5a879574c7b192b99804dcb123ad0b",
             min_mem_gib=4,
             min_storage_gib=16.0,
         )
 
     async def start(self):
-        self._ctx.run()
-        yield self._ctx.commit()
+        self._ctx.run("/bin/sh", "mongo")
+        """
+        Run 
+        use admin
+        db.createUser(
+        {
+            user: "myUserAdmin",
+            pwd: "abc123",
+            roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+        }
+)
+        """
+        yield self._ctx.commit("u")
 
     async def run(self):
         while True:
-            await asyncio.sleep(REFRESH_INTERVAL_SEC)
-            self._ctx.run()
+            self._ctx.run("python3","PyDriver.py", "--create" , str('{"Hello":"world"}'))
 
             future_results = yield self._ctx.commit()
             results = await future_results
-            print(results[0].stdout.strip())
 
 
 async def main():
