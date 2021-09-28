@@ -48,7 +48,6 @@ async def main():
         while datetime.now() < start_time + timedelta(minutes=1):
             for num, instance in enumerate(cluster.instances):
                 print(f"Instance {num} is {instance.state.value} on {instance.provider_name}")
-            await asyncio.sleep(REFRESH_INTERVAL_SEC)
 
 
 if __name__ == "__main__":
