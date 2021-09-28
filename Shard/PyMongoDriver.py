@@ -7,14 +7,8 @@ import argparse
 
 
 client = MongoClient('mongodb://tmp/mongodb-27017.sock')
-db = client.mydb
-col = db.posts
-
-post = {'author' : 'Mike',
-        'text' : 'My first blog post!',
-        'tags': ['mongodb', 'python', 'pymongo'],
-        'count': 1,
-        'date': datetime.datetime.utcnow()}
+db = client["MyDatabase"]
+col = db["MyCollection"]
 
 def create(document : dict):
     post_id = col.insert(document)\
