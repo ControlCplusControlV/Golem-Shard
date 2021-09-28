@@ -17,7 +17,8 @@ post = {'author' : 'Mike',
         'date': datetime.datetime.utcnow()}
 
 def create(document : dict):
-    post_id = col.insert(post)
+    post_id = col.insert(document)\
+
 def read(documentParams : dict):
     col.find_one(documentParams)
 
@@ -25,9 +26,8 @@ def read(documentParams : dict):
 def update(document : dict, newDoc : dict):
     col.update(document, newDoc, multi=True)
 
-#FindAndModify
 def remove(paramterDict : dict):
-    col.remove({'author': 'Mike'})
+    col.remove(paramterDict)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
