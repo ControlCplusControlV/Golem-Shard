@@ -36,8 +36,8 @@ if __name__ == "__main__":
     if len(args.create) >= 1:
         create(args.create)
     if len(args.read) >= 1:
-        create(args.read)
+        read(args.read)
     if len(args.update) >= 1:
-        create(args.update)
+        update(args.update)
     if len(args.delete) >= 1:
-        create(args.delete)
+        remove(args.delete)
