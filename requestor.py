@@ -18,23 +18,15 @@ class ShardService(Service):
         )
 
     async def start(self):
-        self._ctx.run("/bin/sh", "mongo")
-        """
-        Run 
-        use admin
-        db.createUser(
-        {
-            user: "myUserAdmin",
-            pwd: "abc123",
-            roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
-        }
-)
-        """
-        yield self._ctx.commit("u")
+        self._ctx.run("/bin/sh", "docker-entrypoint.sh")
+        self._ctx.run("/bin/sh", "mongod")
+        self._ctx.run("/bin/sh", "mongo", "mongoScript.js")
+        initialize = yield self._ctx.commit()
+        await initialize
 
     async def run(self):
         while True:
-            self._ctx.run("python3","PyDriver.py", "--create" , str('{"Hello":"world"}'))
+            self._ctx.run("PyDriver.py", "--create" , str('{"Hello":"world"}'))
 
             future_results = yield self._ctx.commit()
             results = await future_results
@@ -48,6 +40,7 @@ async def main():
         while datetime.now() < start_time + timedelta(minutes=1):
             for num, instance in enumerate(cluster.instances):
                 print(f"Instance {num} is {instance.state.value} on {instance.provider_name}")
+            await asyncio.sleep(REFRESH_INTERVAL_SEC)
 
 
 if __name__ == "__main__":
