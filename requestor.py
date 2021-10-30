@@ -22,7 +22,7 @@ class ShardService(Service):
         startMongoDB = yield self._ctx.commit()
         await startMongoDB
         print("MongoDB started")
-        self._ctx.run("/bin/sh", "mongo", "mongoScript.js")
+        self._ctx.run("/bin/mongosh", "mongoScript.js")
         initialize = yield self._ctx.commit()
         await initialize
 
