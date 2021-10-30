@@ -18,7 +18,10 @@ class ShardService(Service):
         )
 
     async def start(self):
-        self._ctx.run("/bin/sh", "mongod", "--dbpath", "/shard/db", "--logpath", "/var/log/mongodb/mongod.log", "--fork")
+        self._ctx.run("/bin/mongod", "--dbpath", "/shard/db", "--logpath", "/var/log/mongodb/mongod.log", "--fork")
+        startMongoDB = yield self._ctx.commit()
+        await startMongoDB
+        print("MongoDB started")
         self._ctx.run("/bin/sh", "mongo", "mongoScript.js")
         initialize = yield self._ctx.commit()
         await initialize
@@ -39,7 +42,7 @@ async def main():
         while datetime.now() < start_time + timedelta(minutes=1):
             for num, instance in enumerate(cluster.instances):
                 print(f"Instance {num} is {instance.state.value} on {instance.provider_name}")
-            await asyncio.sleep(REFRESH_INTERVAL_SEC)
+            await asyncio.sleep(10)
 
 
 if __name__ == "__main__":
