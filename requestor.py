@@ -18,17 +18,17 @@ class ShardService(Service):
         )
 
     async def start(self):
-        self._ctx.run("/bin/mongod", "--dbpath", "/shard/db", "--logpath", "/var/log/mongodb/mongod.log", "--fork")
+        self._ctx.run("/bin/mongod", "--dbpath", "/shard/db", "--logpath", "/var/log/mongodb/mongod.log", "-f", "/etc/mongod.conf.orig","--fork")
         startMongoDB = yield self._ctx.commit()
         await startMongoDB
         print("MongoDB started")
-        self._ctx.run("/bin/mongosh", "mongoScript.js")
+        self._ctx.run("/bin/mongosh", '"mongodb://tmp/mongodb-27017.sock"', "mongoScript.js")
         initialize = yield self._ctx.commit()
         await initialize
 
     async def run(self):
         while True:
-            self._ctx.run("PyDriver.py", "--create" , str('{"Hello":"world"}'))
+            self._ctx.run("python3", "PyDriver.py", "--create" , str('{"Hello":"world"}'))
 
             future_results = yield self._ctx.commit()
             results = await future_results
