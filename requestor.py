@@ -22,9 +22,9 @@ class ShardService(Service):
         startMongoDB = yield self._ctx.commit()
         await startMongoDB
         print("MongoDB started")
-        self._ctx.run("/bin/mongosh", '"mongodb://tmp/mongodb-27017.sock"', "mongoScript.js")
-        initialize = yield self._ctx.commit()
-        await initialize
+        #self._ctx.run("/bin/mongosh", '"mongodb://tmp/mongodb-27017.sock"', "mongoScript.js")
+        #initialize = yield self._ctx.commit()
+        #await initialize
 
     async def run(self):
         while True:
