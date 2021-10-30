@@ -18,8 +18,7 @@ class ShardService(Service):
         )
 
     async def start(self):
-        self._ctx.run("/bin/sh", "docker-entrypoint.sh")
-        self._ctx.run("/bin/sh", "mongod")
+        self._ctx.run("/bin/sh", "mongod", "--dbpath", "/shard/db", "--logpath", "/var/log/mongodb/mongod.log", "--fork")
         self._ctx.run("/bin/sh", "mongo", "mongoScript.js")
         initialize = yield self._ctx.commit()
         await initialize
