@@ -12,26 +12,24 @@ class ShardService(Service):
     @staticmethod
     async def get_payload():
         return await vm.repo(
-            image_hash="0a4c65ecfd19a1f45e1f9cf77a2da633fcb22f1dea786c261d26af46",
+            image_hash="9d8f86823b6864975f87ad0f8c5a879574c7b192b99804dcb123ad0b",
             min_mem_gib=4,
             min_storage_gib=16.0,
         )
 
     async def start(self):
-        self._ctx.run("/bin/mongod", "--dbpath", "/shard/db", "--logpath", "/var/log/mongodb/mongod.log", "-f", "/etc/mongod.conf.orig","--fork")
-        startMongoDB = yield self._ctx.commit()
-        await startMongoDB
-        print("MongoDB started")
-        #self._ctx.run("/bin/mongosh", '"mongodb://tmp/mongodb-27017.sock"', "mongoScript.js")
-        #initialize = yield self._ctx.commit()
-        #await initialize
+        async for script in super().start():
+            script = self._ctx.new_script()
+            script.run("/bin/mongod", "--dbpath", "/shard/db", "--logpath", "/var/log/mongodb/mongod.log", "-f", "/etc/mongod.conf.orig","--fork")
+            print("MongoDB engine started")
+            yield script
 
     async def run(self):
         while True:
-            self._ctx.run("/bin/python3", "PyDriver.py", "--create" , str('{"Hello":"world"}'))
+            script = self._ctx.new_script()
+            script.run("/bin/python3","PyDriver.py", "--create" , str('{"Hello":"world"}'))
 
-            future_results = yield self._ctx.commit()
-            results = await future_results
+            yield script
 
 
 async def main():
@@ -42,8 +40,11 @@ async def main():
         while datetime.now() < start_time + timedelta(minutes=1):
             for num, instance in enumerate(cluster.instances):
                 print(f"Instance {num} is {instance.state.value} on {instance.provider_name}")
-            await asyncio.sleep(10)
-
+            await asyncio.sleep(REFRESH_INTERVAL_SEC)
+            
+        cluster.stop()
+        while(still_running()):
+            await asyncio.sleep(2)
 
 if __name__ == "__main__":
     enable_default_logger(log_file="hello.log")
