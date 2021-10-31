@@ -19,10 +19,12 @@ class ShardService(Service):
 
     async def start(self):
         async for script in super().start():
-            script = self._ctx.new_script()
-            script.run("/bin/mongod", "--dbpath", "/shard/db", "--logpath", "/var/log/mongodb/mongod.log", "-f", "/etc/mongod.conf.orig","--fork")
-            print("MongoDB engine started")
             yield script
+
+        script = self._ctx.new_script()
+        script.run("/bin/mongod", "--dbpath", "/shard/db", "--logpath", "/var/log/mongodb/mongod.log", "-f", "/etc/mongod.conf.orig","--fork")
+        print("MongoDB engine started")
+        yield script
 
     async def run(self):
         while True:
