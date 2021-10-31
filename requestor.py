@@ -28,7 +28,7 @@ class ShardService(Service):
 
     async def run(self):
         while True:
-            self._ctx.run("python3", "PyDriver.py", "--create" , str('{"Hello":"world"}'))
+            self._ctx.run("/bin/python3", "PyDriver.py", "--create" , str('{"Hello":"world"}'))
 
             future_results = yield self._ctx.commit()
             results = await future_results
